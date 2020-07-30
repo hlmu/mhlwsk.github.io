@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=6.7.0" color="#222">
+
+
+  <link rel="manifest" href="/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/browserconfig.xml">
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.7.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘  要计算机系统是由硬件和软件组成的，它们共同工作来运行应用程序。即使是最简单的一个应用程序，也需要计算机系统中的每个主要组成部分协调工作。本文以hello程序的运行为切入点，解释了当在系统上运行hello程序时，系统发生的编译、链接、加载、进程管理、存储管理等过程，以及它们的运行机制。关键词：操作系统；计算机组成原理；汇编">
+<meta name="keywords" content="计算机组成原理,汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[2018 HIT CSAPP大作业] 程序人生 Hello’s P2P">
+<meta property="og:url" content="https://www.mhlwsk.com/archives/44834.html">
+<meta property="og:site_name" content="木屋">
+<meta property="og:description" content="摘  要计算机系统是由硬件和软件组成的，它们共同工作来运行应用程序。即使是最简单的一个应用程序，也需要计算机系统中的每个主要组成部分协调工作。本文以hello程序的运行为切入点，解释了当在系统上运行hello程序时，系统发生的编译、链接、加载、进程管理、存储管理等过程，以及它们的运行机制。关键词：操作系统；计算机组成原理；汇编">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t1.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t2.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t3.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t4.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t5.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t6.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t7.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t8.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t9.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t10.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t11.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t12.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t13.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t14.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t15.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t16.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t17.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t18.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t19.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t20.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t21.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t22.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t23.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t24.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t25.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t26.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t27.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t28.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t29.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t30.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t31.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t32.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t33.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t34.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t35.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t36.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t37.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t38.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t39.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t40.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t41.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t42.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t43.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t44.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t45.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t46.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t47.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t48.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t49.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t50.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t51.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t52.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t53.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t54.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t55.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t56.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t57.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t58.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t59.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t60.png">
+<meta property="og:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t61.png">
+<meta property="og:updated_time" content="2020-07-30T13:07:23.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[2018 HIT CSAPP大作业] 程序人生 Hello’s P2P">
+<meta name="twitter:description" content="摘  要计算机系统是由硬件和软件组成的，它们共同工作来运行应用程序。即使是最简单的一个应用程序，也需要计算机系统中的每个主要组成部分协调工作。本文以hello程序的运行为切入点，解释了当在系统上运行hello程序时，系统发生的编译、链接、加载、进程管理、存储管理等过程，以及它们的运行机制。关键词：操作系统；计算机组成原理；汇编">
+<meta name="twitter:image" content="https://www.mhlwsk.com/images/2018-HIT-CSAPP-hello/t1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="木屋" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.mhlwsk.com/archives/44834.html">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[2018 HIT CSAPP大作业] 程序人生 Hello’s P2P | 木屋</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">木屋</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">mhlwsk的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives menu-item-active">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/44834.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">[2018 HIT CSAPP大作业] 程序人生 Hello’s P2P
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-30 02:19:42" itemprop="dateCreated datePublished" datetime="2018-12-30T02:19:42+08:00">2018-12-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/44834.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/44834.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="摘-要"><a href="#摘-要" class="headerlink" title="摘  要"></a>摘  要</h1><p>计算机系统是由硬件和软件组成的，它们共同工作来运行应用程序。即使是最简单的一个应用程序，也需要计算机系统中的每个主要组成部分协调工作。本文以hello程序的运行为切入点，解释了当在系统上运行hello程序时，系统发生的编译、链接、加载、进程管理、存储管理等过程，以及它们的运行机制。<br><strong>关键词</strong>：操作系统；计算机组成原理；汇编<br><a id="more"></a></p>
+<h1 id="第1章-概述"><a href="#第1章-概述" class="headerlink" title="第1章 概述"></a>第1章 概述</h1><h2 id="1-1-Hello简介"><a href="#1-1-Hello简介" class="headerlink" title="1.1 Hello简介"></a>1.1 Hello简介</h2><p><strong>Hello的P2P（Program to process）和020（From Zero to Zero）过程</strong><br>用户在文本编辑器中编写代码得到hello.c。hello.c经过预处理（cpp）变成hello.i（修改了的源程序），经过编译（ccl）生成hello.s（汇编程序），经过汇编生成hello.o（可重定位目标程序），经过链接（ld）生成hello（可执行目标程序）。<br>用户键入命令，bash自行fork一个process，并在这个process中调用execve执行hello。execve加载hello，并调用_start函数，不久控制权被转移到hello的main函数。<br>hello调用write等系统函数在屏幕打印信息，随后退出，接下来终止的hello进程被父进程bash回收。<br>实验中所用的hello.c代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 大作业的 hello.c 程序</span></span><br><span class="line"><span class="comment">// gcc -m64 -no-pie -fno-PIC hello.c -o hello</span></span><br><span class="line"><span class="comment">// 程序运行过程中可以按键盘，如不停乱按，包括回车，Ctrl-Z，Ctrl-C等。</span></span><br><span class="line"><span class="comment">// 可以 运行 ps  jobs  pstree fg 等命令</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt; </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> sleepsecs=<span class="number">2.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(argc!=<span class="number">3</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Usage: Hello 学号 姓名！\n"</span>);</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Hello %s %s\n"</span>,argv[<span class="number">1</span>],argv[<span class="number">2</span>]);</span><br><span class="line">		sleep(sleepsecs);</span><br><span class="line">	&#125;</span><br><span class="line">	getchar();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-2-环境与工具"><a href="#1-2-环境与工具" class="headerlink" title="1.2 环境与工具"></a>1.2 环境与工具</h2><p>硬件环境：Intel(R) Core(TM) i5-3320M CPU；8.00GB RAM<br>软件环境：Windows 10 64位；Vmware Workstation 14 Pro；Ubuntu 16.04 LTS 64位<br>开发工具：CodeBlocks 64位；Visual Studio Code；GCC 5.4.0；objdump；EDB；readelf；hexedit</p>
+<h2 id="1-3-中间结果"><a href="#1-3-中间结果" class="headerlink" title="1.3 中间结果"></a>1.3 中间结果</h2><p>为编写本论文，生成的中间结果文件的名字以及文件的作用。</p>
+<table>
+<thead>
+<tr>
+<th>文件名称</th>
+<th>文件作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hello.i</td>
+<td>hello预处理之后的文本文件</td>
+</tr>
+<tr>
+<td>hello.s</td>
+<td>hello编译之后的汇编文件</td>
+</tr>
+<tr>
+<td>hello.o</td>
+<td>hello汇编之后的可重定位目标文件</td>
+</tr>
+<tr>
+<td>hello</td>
+<td>hello链接之后的可执行目标文件</td>
+</tr>
+<tr>
+<td>hello_o.objdump</td>
+<td>hello.o的反汇编代码</td>
+</tr>
+<tr>
+<td>hello_o.elf</td>
+<td>hello.o的ELF文件信息</td>
+</tr>
+<tr>
+<td>hello.objdump</td>
+<td>hello的反汇编代码</td>
+</tr>
+<tr>
+<td>hello.elf</td>
+<td>hello的ELF文件信息</td>
+</tr>
+<tr>
+<td>test.c</td>
+<td>测试用代码</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-4-本章小结"><a href="#1-4-本章小结" class="headerlink" title="1.4 本章小结"></a>1.4 本章小结</h2><p>本章简要介绍了hello的P2P，O2O过程，并列出了本次实验的环境和中间结果。</p>
+<h1 id="第2章-预处理"><a href="#第2章-预处理" class="headerlink" title="第2章 预处理"></a>第2章 预处理</h1><h2 id="2-1-预处理的概念与作用"><a href="#2-1-预处理的概念与作用" class="headerlink" title="2.1 预处理的概念与作用"></a>2.1 预处理的概念与作用</h2><p>预处理器（cpp）根据以字符#开头的命令，修改原始的C程序。比如hello.c中第1行的#include &lt;stdio.h&gt;命令告诉预处理器读取系统头文件stdio.h的内容，并把它直接插入程序文本中。结果就得到了另一个C程序，通常是以.i作为文件拓展名。<br>这个过程为接下来的编译过程“简化”了代码。</p>
+<h2 id="2-2在Ubuntu下预处理的命令"><a href="#2-2在Ubuntu下预处理的命令" class="headerlink" title="2.2在Ubuntu下预处理的命令"></a>2.2在Ubuntu下预处理的命令</h2><p><strong>预处理命令：cpp hello.c &gt; hello.i</strong><br><img src="/images/2018-HIT-CSAPP-hello/t1.png" alt="pic1"></p>
+<h2 id="2-3-Hello的预处理结果解析"><a href="#2-3-Hello的预处理结果解析" class="headerlink" title="2.3 Hello的预处理结果解析"></a>2.3 Hello的预处理结果解析</h2><p><img src="/images/2018-HIT-CSAPP-hello/t2.png" alt="pic2"><br>经过预处理的hello代码被展开，在main之前插入了大量代码。这些代码是根据#include从stdio.h、unistd.h、stdlib.h中提取的，其中包含了printf的声明等。<br><img src="/images/2018-HIT-CSAPP-hello/t3.png" alt="pic3"></p>
+<h2 id="2-4-本章小结"><a href="#2-4-本章小结" class="headerlink" title="2.4 本章小结"></a>2.4 本章小结</h2><p>hello.c在编译之前需要经过预处理步骤，该步骤会根据hello.c中以#开头的命令展开相应代码并修改原始的C程序，以便下一步编译。</p>
+<h1 id="第3章-编译"><a href="#第3章-编译" class="headerlink" title="第3章 编译"></a>第3章 编译</h1><h2 id="3-1-编译的概念与作用"><a href="#3-1-编译的概念与作用" class="headerlink" title="3.1 编译的概念与作用"></a>3.1 编译的概念与作用</h2><p>编译器（ccl）将文本文件hello.i翻译成文本文件hello.s，它包含一个汇编语言程序。</p>
+<h2 id="3-2-在Ubuntu下编译的命令"><a href="#3-2-在Ubuntu下编译的命令" class="headerlink" title="3.2 在Ubuntu下编译的命令"></a>3.2 在Ubuntu下编译的命令</h2><p><strong>编译命令：gcc -S hello.i -o hello.s</strong><br><img src="/images/2018-HIT-CSAPP-hello/t4.png" alt="pic4"></p>
+<h2 id="3-3-Hello的编译结果解析"><a href="#3-3-Hello的编译结果解析" class="headerlink" title="3.3 Hello的编译结果解析"></a>3.3 Hello的编译结果解析</h2><h3 id="3-3-1-hello-s中出现的标识"><a href="#3-3-1-hello-s中出现的标识" class="headerlink" title="3.3.1 hello.s中出现的标识"></a>3.3.1 hello.s中出现的标识</h3><ul>
+<li>.file 源文件</li>
+<li>.data 数据段</li>
+<li>.globl 全局标识符</li>
+<li>.string 字符串类型</li>
+<li>.long long类型</li>
+<li>.text 代码段</li>
+</ul>
+<h3 id="3-3-2-数据类型"><a href="#3-3-2-数据类型" class="headerlink" title="3.3.2 数据类型"></a>3.3.2 数据类型</h3><p>hello.c中出现的数据类型有整数类型（int）、字符串、字符指针数组。</p>
+<h4 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h4><p>hello.c中的整数类型有全局变量int sleepsecs，main的参数int argc，局部变量int i。<br>全局变量int sleepecs的定义如下，可以看到第六行为其分配大小4字节，第八行为其赋初值2。<br><img src="/images/2018-HIT-CSAPP-hello/t5.png" alt="pic5"><br>对sleepecs的调用采用了PC相对寻址：<br><img src="/images/2018-HIT-CSAPP-hello/t6.png" alt="pic6"><br>参数int argc，局部变量i出现在main的栈帧中，它们没有标识符，也不需要被声明，而是直接使用。<br><img src="/images/2018-HIT-CSAPP-hello/t7.png" alt="pic7"><br><img src="/images/2018-HIT-CSAPP-hello/t8.png" alt="pic8"></p>
+<h4 id="字符串和字符指针数组"><a href="#字符串和字符指针数组" class="headerlink" title="字符串和字符指针数组"></a>字符串和字符指针数组</h4><p>两个printf语句中的格式字符串出现在.rodata段。<br><img src="/images/2018-HIT-CSAPP-hello/t9.png" alt="pic9"><br>作为main参数的<code>char *argv[]</code>则出现在栈帧中。<br><img src="/images/2018-HIT-CSAPP-hello/t10.png" alt="pic10"></p>
+<h3 id="3-3-3运算与操作"><a href="#3-3-3运算与操作" class="headerlink" title="3.3.3运算与操作"></a>3.3.3运算与操作</h3><h4 id="赋值操作"><a href="#赋值操作" class="headerlink" title="赋值操作"></a>赋值操作</h4><p>源程序21行对i赋值为零的操作使用mov语句实现的。<br><img src="/images/2018-HIT-CSAPP-hello/t11.png" alt="pic11"></p>
+<h4 id="比较操作"><a href="#比较操作" class="headerlink" title="比较操作"></a>比较操作</h4><p>hello.c中的两个比较操作被解析为cmpl操作。<br><strong>argc!=3</strong><br><img src="/images/2018-HIT-CSAPP-hello/t12.png" alt="pic12"><br><strong>i&lt;10</strong><br><img src="/images/2018-HIT-CSAPP-hello/t13.png" alt="pic13"></p>
+<h4 id="算术运算"><a href="#算术运算" class="headerlink" title="算术运算"></a>算术运算</h4><p>for循环中的i++采用addl来实现。<br><img src="/images/2018-HIT-CSAPP-hello/t14.png" alt="pic14"></p>
+<h4 id="数组操作"><a href="#数组操作" class="headerlink" title="数组操作"></a>数组操作</h4><p>argv[1]：首先从-32(%rbp)读取argv地址存入rax，接下来rax增加8个字节，此时rax中存放的是&amp;(argv[1])，读取此地址指向的argv[1]放入rax，最后存入rsi。<br><img src="/images/2018-HIT-CSAPP-hello/t15.png" alt="pic15"><br>argv[2]：首先从-32(%rbp)读取argv地址存入rax，接下来rax增加16个字节，此时rax中存放的是&amp;(argv[2])，读取此地址指向的argv[2]放入rdx。<br><img src="/images/2018-HIT-CSAPP-hello/t16.png" alt="pic16"></p>
+<h3 id="3-3-4控制转移"><a href="#3-3-4控制转移" class="headerlink" title="3.3.4控制转移"></a>3.3.4控制转移</h3><h4 id="if语句"><a href="#if语句" class="headerlink" title="if语句"></a>if语句</h4><p><strong>if(argc!=3) {}</strong><br>比较argc与3的大小，然后通过条件跳转je，实现若argc==3，则跳过if语句的代码块。<br><img src="/images/2018-HIT-CSAPP-hello/t17.png" alt="pic17"><br><img src="/images/2018-HIT-CSAPP-hello/t18.png" alt="pic18"></p>
+<h4 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h4><p>.L2初始化<br><img src="/images/2018-HIT-CSAPP-hello/t19.png" alt="pic19"><br>.L3判断循环条件</p>
+<p><img src="/images/2018-HIT-CSAPP-hello/t20.png" alt="pic20"><br>.L4循环块（51行为迭代i）<br><img src="/images/2018-HIT-CSAPP-hello/t21.png" alt="pic21"><br>首先给i赋值为0，然后跳转到.L3以比较i是否小于等于9，如果小于等于9，则跳转到循环块.L4，否则继续执行循环外的语句getchar。而循环块执行到末尾会继续执行循环判断条件.L3，重复以上步骤直至循环结束。</p>
+<h3 id="3-3-5-函数调用"><a href="#3-3-5-函数调用" class="headerlink" title="3.3.5 函数调用"></a>3.3.5 函数调用</h3><p>对printf的调用，参数被存放在寄存器传递。以printf(“Hello %s %s\n”,argv[1],argv[2]);为例，格式化字符串被存放在edi传递，argv[1]被放在rsi，argv[2]被放在rdx。使用call来调用printf，而printf的返回值则会被存入eax返回。<br><img src="/images/2018-HIT-CSAPP-hello/t22.png" alt="pic22"><br>对exit函数的调用，参数被存放在edi传递，然后使用call调用exit。<br><img src="/images/2018-HIT-CSAPP-hello/t23.png" alt="pic23"><br>对sleep的调用，参数被存放在edi传递，然后使用call调用sleep。<br><img src="/images/2018-HIT-CSAPP-hello/t24.png" alt="pic24"><br>对getchar的调用直接使用了call。<br>main函数的返回值放在eax传递。<br><img src="/images/2018-HIT-CSAPP-hello/t25.png" alt="pic25"></p>
+<h2 id="3-4-本章小结"><a href="#3-4-本章小结" class="headerlink" title="3.4 本章小结"></a>3.4 本章小结</h2><p>本章主要阐述了汇编操作是怎样处理源程序中的数据、各种操作、控制转移、函数调用的。<br>编译器将C语言代码转换成汇编代码，并最终转换生成机器码。这个转换过程中需要对原始代码中的数据和操作进行映射得到相应汇编代码下的解决方案，而由于全局变量引用等因素的影响，这个过程不是简单的一一映射关系。</p>
+<h1 id="第4章-汇编"><a href="#第4章-汇编" class="headerlink" title="第4章 汇编"></a>第4章 汇编</h1><h2 id="4-1-汇编的概念与作用"><a href="#4-1-汇编的概念与作用" class="headerlink" title="4.1 汇编的概念与作用"></a>4.1 汇编的概念与作用</h2><p>汇编器（as）将hello.s翻译成机器指令，把这些指令打包成可重定位目标程序（relocatable object program）的格式，并将结果保存在目标文件hello.o中。hello.o文件是一个二进制文件，它包含的17个字节是函数main的指令编码。</p>
+<h2 id="4-2-在Ubuntu下汇编的命令"><a href="#4-2-在Ubuntu下汇编的命令" class="headerlink" title="4.2 在Ubuntu下汇编的命令"></a>4.2 在Ubuntu下汇编的命令</h2><p><strong>汇编命令as hello.s -o hello.o</strong></p>
+<p><img src="/images/2018-HIT-CSAPP-hello/t26.png" alt="pic26"></p>
+<h2 id="4-3-可重定位目标elf格式"><a href="#4-3-可重定位目标elf格式" class="headerlink" title="4.3 可重定位目标elf格式"></a>4.3 可重定位目标elf格式</h2><p>分析hello.o的ELF格式，用readelf等列出其各节的基本信息，特别是重定位项目分析。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ELF头</td>
+<td>描述了生成该文件的系统的大小和字节顺序以及帮助链接器语法分析和解释目标文件的信息</td>
+</tr>
+<tr>
+<td>.text</td>
+<td>已编译的程序的机器代码</td>
+</tr>
+<tr>
+<td>.rodata</td>
+<td>只读数据</td>
+</tr>
+<tr>
+<td>.data</td>
+<td>已初始化的全局和静态C变量</td>
+</tr>
+<tr>
+<td>.bss</td>
+<td>未初始化的全局和静态C变量</td>
+</tr>
+<tr>
+<td>.symtab</td>
+<td>一个符号表，存放在程序中定义和引用的函数和全局变量的信息</td>
+</tr>
+<tr>
+<td>.rel.text</td>
+<td>.text节的重定位记录表</td>
+</tr>
+<tr>
+<td>.rel.data</td>
+<td>被模块引用或定义的所有全局变量的重定位信息</td>
+</tr>
+<tr>
+<td>.debug</td>
+<td>一个调试符号表</td>
+</tr>
+<tr>
+<td>.line</td>
+<td>原始C源程序的行号和.text节中机器指令之间的映射</td>
+</tr>
+<tr>
+<td>.strtab</td>
+<td>一个字符串表</td>
+</tr>
+<tr>
+<td>节头部表</td>
+<td>每个节的偏移量大小</td>
+</tr>
+</tbody>
+</table>
+<p>ELF头（ELF header）以一个16字节的序列开始，这个序列描述了生成该文件的系统的大小和字节顺序。ELF头剩下的部分包含帮助链接器语法分析和解释目标文件的信息。其中包括ELF头的大小、目标文件的类型（如可重定位、可执行或者共享的）、机器类型（如x86-64）、节头部表（section header table）的文件偏移，以及节头部表中条目的大小和数量。<br><img src="/images/2018-HIT-CSAPP-hello/t27.png" alt="pic27"><br>不同节的位置和大小是由节头部表描述的，其中目标文件中每个节都有一个固定大小的条目。<br><img src="/images/2018-HIT-CSAPP-hello/t28.png" alt="pic28"><br>.rela.text 一个.text节中位置的列表，当链接器把这个目标文件和其它文件组合时，需要修改这些位置。一般而言，任何调用外部函数或者引用全局变量的指令都需要修改。另一方面，调用本地函数的指令则不需要修改。<br>如下图中有八个重定位记录。重定位记录的结构如下所示：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> offset;    <span class="comment">/* Offset of the reference to relocate */</span> </span><br><span class="line">	<span class="keyword">int</span> symbol:<span class="number">24</span>, <span class="comment">/* Symbol of the reference should point to */</span></span><br><span class="line">	type:<span class="number">8</span>;	       <span class="comment">/* Relocation type */</span></span><br><span class="line">&#125; Elf32_Rel;</span><br></pre></td></tr></table></figure></p>
+<p>以下图对sleepsecs的重定位记录为例。它的offset为0x5c，即需要修改的位置是.text段偏移量0x5c处；sybol为0x9，对应.symtab中第9号索引（sleepsecs）；type是0x2，即类型为重定位PC相对引用。<br><img src="/images/2018-HIT-CSAPP-hello/t29.png" alt="pic29"><br><img src="/images/2018-HIT-CSAPP-hello/t30.png" alt="pic30"><br>.symtab 一个符号表，它存放在程序中定义和引用的函数和全局变量的信息。和编译器中的符号表不同，.symtab符号表不包含局部变量的条目。</p>
+<h2 id="4-4-Hello-o的结果解析"><a href="#4-4-Hello-o的结果解析" class="headerlink" title="4.4 Hello.o的结果解析"></a>4.4 Hello.o的结果解析</h2><p><img src="/images/2018-HIT-CSAPP-hello/t31.png" alt="pic31"><br>hello.o的反汇编与hello.s的差别总体不大，主要体现在以下几方面：</p>
+<ol>
+<li>全局变量引用 hello.o反汇编采用的是offset(%rip)的形式，而hello.s采用的是symbol(%rip)的形式。</li>
+<li>函数调用 hello.o反汇编采用的是call offset的形式，而hello.s采用call symbol的形式。</li>
+<li>分支转移 hello.o反汇编采用的是jmp offset的形式，而hello.s采用jmp Label的形式。</li>
+<li>栈帧大小不同。<br>机器指令由指令指示符、（寄存器指示符）、（常数字）组成。</li>
+</ol>
+<p>机器语言与汇编语言大致具有一一对应的关系。但有些特殊情况，比如：</p>
+<ol>
+<li>转移控制 汇编语言中的jmp指令有直接跳转（在hello.o的反汇编中这个地址为绝对地址）和间接跳转，而转换成机器码后跳转指令会有几种不同的编码，最常用的是PC相对的，还有给出绝对地址的。而汇编器和链接器会选择适当的跳转目的编码。</li>
+<li>一条指令可能有多个汇编码中的别名，例如jle和jg。</li>
+<li>函数调用，在hello.o的反汇编文件中，call的地址是下一条指令的地址，而对应机器码中的操作码为0。这是因为hello.c中调用的函数都是共享库中的函数，在链接后才能确定函数的最终地址。因而在hello.o中只是将call的地址置为下一条指令的地址，而机器码的操作数则为目标位置（这里为下一条指令）相对于下一条指令的偏移，即0。</li>
+</ol>
+<h2 id="4-5-本章小结"><a href="#4-5-本章小结" class="headerlink" title="4.5 本章小结"></a>4.5 本章小结</h2><p>本章阐述了hello从hello.s到hello.o的汇编过程。分析了hello.o的ELF格式，并通过查看比较反汇编代码和汇编代码分析了汇编语言与机器码的关系。<br>汇编过程将汇编语言转换为机器码，生成可重定位目标文件，这个文件根据ELF格式对机器码进行打包，并为接下来的链接过程做好了准备。</p>
+<h1 id="第5章-链接"><a href="#第5章-链接" class="headerlink" title="第5章 链接"></a>第5章 链接</h1><h2 id="5-1-链接的概念与作用"><a href="#5-1-链接的概念与作用" class="headerlink" title="5.1 链接的概念与作用"></a>5.1 链接的概念与作用</h2><p>链接是将各种代码和数据片段收集并组合成一个单一文件的过程，这个文件可以被加载（复制）到内存执行。链接可以执行于编译时，也可以执行于加载时，甚至执行于运行时。<br>链接器使得分离编译成为可能。我们不用将一个大型的应用程序组织为一个巨大的源文件，而是可以把它分解为更小、更好管理的模块，可以独立地修改和编译这些模块。当我们改变这些模块中的其中一个时，只需简单地重新编译它，并重新链接应用，而不必重新编译其它文件。</p>
+<h2 id="5-2-在Ubuntu下链接的命令"><a href="#5-2-在Ubuntu下链接的命令" class="headerlink" title="5.2 在Ubuntu下链接的命令"></a>5.2 在Ubuntu下链接的命令</h2><p><code>ld -dynamic-linker /lib64/ld-linux-x86-64.so.2  /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o hello.o -lc /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/x86_64-linux-gnu/crtn.o -z relro -o hello.out</code><br><img src="/images/2018-HIT-CSAPP-hello/t32.png" alt="pic32"></p>
+<h2 id="5-3-可执行目标文件hello的格式"><a href="#5-3-可执行目标文件hello的格式" class="headerlink" title="5.3 可执行目标文件hello的格式"></a>5.3 可执行目标文件hello的格式</h2><p>Linux的ELF文件格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ELF头</td>
+<td>描述文件的总体格式，包括程序的入口点</td>
+</tr>
+<tr>
+<td>段头部表</td>
+<td>将连续的文件映射到运行时内存段</td>
+</tr>
+<tr>
+<td>.init</td>
+<td>定义了一个小函数<code>_init</code></td>
+</tr>
+<tr>
+<td>.text</td>
+<td>已编译的程序的机器代码</td>
+</tr>
+<tr>
+<td>.rodata</td>
+<td>只读数据</td>
+</tr>
+<tr>
+<td>.data</td>
+<td>已初始化的全局和静态C变量</td>
+</tr>
+<tr>
+<td>.bss</td>
+<td>未初始化的全局和静态C变量</td>
+</tr>
+<tr>
+<td>.symtab</td>
+<td>一个符号表，存放在程序中定义和引用的函数和全局变量的信息</td>
+</tr>
+<tr>
+<td>.debug</td>
+<td>一个调试符号表</td>
+</tr>
+<tr>
+<td>.line</td>
+<td>原始C源程序的行号和.text节中机器指令之间的映射</td>
+</tr>
+<tr>
+<td>.strtab</td>
+<td>一个字符串表</td>
+</tr>
+<tr>
+<td>节头部表</td>
+<td>每个节的偏移量大小</td>
+</tr>
+</tbody>
+</table>
+<h4 id="hello的ELF头"><a href="#hello的ELF头" class="headerlink" title="hello的ELF头"></a>hello的ELF头</h4><p><img src="/images/2018-HIT-CSAPP-hello/t33.png" alt="pic33"><br>节头部表 节头部表对hello中所有的节进行了声明，其中Size是每个节的大小，Offset是每个节在程序中的偏移量，Address是程序被载入后各段的虚拟地址。<br><img src="/images/2018-HIT-CSAPP-hello/t34.png" alt="pic34"></p>
+<h4 id="段头部表"><a href="#段头部表" class="headerlink" title="段头部表"></a>段头部表</h4><p><img src="/images/2018-HIT-CSAPP-hello/t35.png" alt="pic35"></p>
+<h2 id="5-4-hello的虚拟地址空间"><a href="#5-4-hello的虚拟地址空间" class="headerlink" title="5.4 hello的虚拟地址空间"></a>5.4 hello的虚拟地址空间</h2><p><strong>.plt 位于代码段的plt表</strong><br><img src="/images/2018-HIT-CSAPP-hello/t36.png" alt="pic36"><br><strong>.text 代码段 如图为hello!_start函数</strong><br><img src="/images/2018-HIT-CSAPP-hello/t37.png" alt="pic37"><br><strong>.rodata 只读数据段</strong><br><img src="/images/2018-HIT-CSAPP-hello/t38.png" alt="pic38"><br><strong>.data 数据段</strong><br><img src="/images/2018-HIT-CSAPP-hello/t39.png" alt="pic39"><br><strong>.bss 位初始化和被初始化为零的数据段</strong><br><img src="/images/2018-HIT-CSAPP-hello/t40.png" alt="pic40"><br><strong>.got 初始化前的got表</strong><br><img src="/images/2018-HIT-CSAPP-hello/t41.png" alt="pic41"></p>
+<h2 id="5-5-链接的重定位过程分析"><a href="#5-5-链接的重定位过程分析" class="headerlink" title="5.5 链接的重定位过程分析"></a>5.5 链接的重定位过程分析</h2><p>hello相比hello多了许多节，如:</p>
+<table>
+<thead>
+<tr>
+<th>节</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.interp</td>
+<td>保存ld.so的路径</td>
+</tr>
+<tr>
+<td>.rela.plt</td>
+<td>.plt的重定位项目</td>
+</tr>
+<tr>
+<td>.init</td>
+<td>初始化代码</td>
+</tr>
+<tr>
+<td>.plt</td>
+<td>动态链接过程链接表</td>
+</tr>
+<tr>
+<td>.got</td>
+<td>动态链接全局偏移量表，用于存放变量</td>
+</tr>
+<tr>
+<td>.got.plt</td>
+<td>动态链接全局偏移量表，用于存放函数</td>
+</tr>
+</tbody>
+</table>
+<p>hello.o的objdump与hello的objdump主要有以下几点不同：</p>
+<ol>
+<li>hello.o的objdump没有<code>_init</code>函数、<code>_start</code>函数、plt表等。</li>
+<li>hello.o的objdump中对全局变量的引用地址均为0，函数调用的地址也只是当前指令的下一条指令的地址。</li>
+</ol>
+<p>hello的重定位记录有两种，分别是PC相对地址的引用和绝对地址的引用。<br>进行重定位时，hello根据.rela.text和.rela.data中的重定位记录，在.symtab中查找需要修改的记录的符号，并结合符号与重定位记录中的位置信息对目标位置进行 修改。如果需要修改的符号是本地符号，则计算偏移量并修改目标位置；如果是共享库中的符号，则创建.got表项（如果是函数还需创建.plt项），并创建新的重定位记录指向.got表项。</p>
+<h2 id="5-6-hello的执行流程"><a href="#5-6-hello的执行流程" class="headerlink" title="5.6 hello的执行流程"></a>5.6 hello的执行流程</h2><table>
+<thead>
+<tr>
+<th>hello执行过程中调用的函数</th>
+<th>函数的地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_dl_start</code></td>
+<td>0x7fb78d93ac38</td>
+</tr>
+<tr>
+<td><code>_dl_init</code></td>
+<td>0x7fb78d9424e0</td>
+</tr>
+<tr>
+<td><code>_start</code></td>
+<td>0x400550</td>
+</tr>
+<tr>
+<td><code>__libc_start_main@plt</code></td>
+<td>0x7fb78d590740</td>
+</tr>
+<tr>
+<td><code>__libc_csu_init</code></td>
+<td>0x4006d0</td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>0x4004a8</td>
+</tr>
+<tr>
+<td><code>main</code></td>
+<td>0x400646</td>
+</tr>
+<tr>
+<td><code>__GI_exit</code></td>
+<td>0x7fb78d5aa030</td>
+</tr>
+<tr>
+<td><code>__run_exit_handlers</code></td>
+<td>0x7fb78d5a9f10</td>
+</tr>
+<tr>
+<td><code>_dl_fini</code></td>
+<td>0x7fb78d94aab0</td>
+</tr>
+<tr>
+<td><code>_IO_cleanup</code></td>
+<td>0x7fb78d5ec310</td>
+</tr>
+<tr>
+<td><code>_IO_flush_all_lockp</code></td>
+<td>0x7fb785ec020</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-7-Hello的动态链接分析"><a href="#5-7-Hello的动态链接分析" class="headerlink" title="5.7 Hello的动态链接分析"></a>5.7 Hello的动态链接分析</h2><p>无论在内存中的何处加载一个目标模块（包括共享目标模块），数据段与代码段的距离总是保持不变。因此，代码段中任何指令和数据段中任何变量之间的距离都是一个运行时常量，与代码段和数据段的绝对内存位置是无关的。<br>而要生成对全局变量PIC引用的编译器利用了这个事实，它在数据段开始的地方创建了一个表，叫做全局偏移量表（GOT）。在GOT中，每个被这个目标模块引用的全局数据目标（过程或全局变量）都有一个8字节条目。编译器还为GOT中每个条目生成 一个重定位记录。在加载时，动态链接器会重定位GOT中的每个条目，使得它包含目标的正确的绝对地址。<br>hello中对.got的初始化是由_dl_start函数执行的。下面的四张图片反应了这一过程：</p>
+<p><img src="/images/2018-HIT-CSAPP-hello/t42.png" alt="pic42"><br>.got <code>_dl_start</code>执行前<br><img src="/images/2018-HIT-CSAPP-hello/t43.png" alt="pic43"><br>.got.plt <code>_dl_start</code>执行前<br><img src="/images/2018-HIT-CSAPP-hello/t44.png" alt="pic44"><br>.got <code>_dl_start</code>执行后<br><img src="/images/2018-HIT-CSAPP-hello/t45.png" alt="pic45"><br>.got.plt <code>_dl_start</code>执行后</p>
+<p>hello要调取由共享库定义的函数puts，printf，而程序调用一个由共享库定义的函数，编译器没有办法预测这个函数的运行地址，因为定义它的共享模块在运行时可以加载到任何位置。为了解决这个问题，GNU编译系统使用了延迟绑定技术：<br>当hello尝试调用puts时，不直接调用puts，而是调用进入puts对应的PLT条目。这个条目会尝试利用GOT项进行间接跳转。<br><img src="/images/2018-HIT-CSAPP-hello/t46.png" alt="pic46"><br>第一次被调用时，GOT项的值为PLT条目中的下一条指令地址，因而接下来会跳回PLT条目，在把puts的ID 0压入栈后，会转到PLT[0]的位置，PLT[0]通过GOT[1]间接地把动态链接器的一个参数压入栈中，然后通过GOT[2]跳转进动态链接器中。动态链接器使用两个栈条目来确定puts的运行时位置，用这个地址重写puts的GOT项，再把控制传递给puts。<br><img src="/images/2018-HIT-CSAPP-hello/t47.png" alt="pic47"><br>在下一次执行到puts对应的PLT条目时，GOT项已经被修改，因此利用GOT项进行的间接跳转会直接跳转到puts函数。<br><img src="/images/2018-HIT-CSAPP-hello/t48.png" alt="pic48"></p>
+<h2 id="5-8-本章小结"><a href="#5-8-本章小结" class="headerlink" title="5.8 本章小结"></a>5.8 本章小结</h2><p>本章讨论了hello的链接过程。链接过程可以发生在编译时，也可以发生在加载时，甚至可以发生在程序执行时。静态链接直接将目标文件和库文件打包至一个可执行文件中，而动态链接则只在可执行目标文件中添加相应重定向记录，并通过GOT表项和延迟绑定的方法实现对目标模块中符号的引用。</p>
+<h1 id="第6章-hello进程管理"><a href="#第6章-hello进程管理" class="headerlink" title="第6章 hello进程管理"></a>第6章 hello进程管理</h1><h2 id="6-1-进程的概念与作用"><a href="#6-1-进程的概念与作用" class="headerlink" title="6.1 进程的概念与作用"></a>6.1 进程的概念与作用</h2><p><strong>概念</strong>：进程是一个执行中的程序的实例，系统中的每个程序都运行在某个进程的上下文中。上下文是由程序正确运行所需的状态组成的。这个状态包括存放在内存中的程序的代码和数据，它的栈、通用目的寄存器的内容、程序计数器、环境变量以及打开文件描述符的集合。</p>
+<p><strong>作用</strong>：进程提供给应用程序两个关键抽象：</p>
+<ol>
+<li>逻辑控制流<br>a)    每个程序似乎独占地使用CPU<br>b)    通过OS内核的上下文切换机制提供</li>
+<li>私有地址空间<br>a)    每个程序似乎独占地使用内存系统<br>b)    OS内核的虚拟内存机制提供</li>
+</ol>
+<h2 id="6-2-简述壳Shell-bash的作用与处理流程"><a href="#6-2-简述壳Shell-bash的作用与处理流程" class="headerlink" title="6.2 简述壳Shell-bash的作用与处理流程"></a>6.2 简述壳Shell-bash的作用与处理流程</h2><p><strong>概念</strong>：shell是一个交互型的应用级程序，它代表用户运行其它程序。它执行一系列的读/求值步骤，然后终止。其中读步骤读取来自用户的一个命令行，求值步骤解析命令行，并代表用户运行程序。</p>
+<p><strong>处理流程</strong>：读取来自用户的命令行并解析，如果是内部命令则直接执行内部命令，否则fork一个shell进程，并在这个进程中用execve加载目标程序，按照命令中的参数决定在前台或者后台运行目标程序，当前台程序结束时用waitpid回收进程。</p>
+<h2 id="6-3-Hello的fork进程创建过程"><a href="#6-3-Hello的fork进程创建过程" class="headerlink" title="6.3 Hello的fork进程创建过程"></a>6.3 Hello的fork进程创建过程</h2><p>在bash中输入 <code>./hello 1******* ***</code> 并敲击回车后，bash解析此条命令，发现./hello不是bash内置命令，于是在当前目录尝试寻找并执行hello文件。此时bash使用fork函数创建一个子进程（这个子进程得到与父进程用户级虚拟地址空间相同但是独立的一份副本），并更改这个子进程的进程组编号。并准备在这个子进程执行execve。</p>
+<h2 id="6-4-Hello的execve过程"><a href="#6-4-Hello的execve过程" class="headerlink" title="6.4 Hello的execve过程"></a>6.4 Hello的execve过程</h2><p>在新创建的子进程中，execve函数加载并运行hello，且带参数列表argv和环境变量envp。在execve加载了hello之后，它调用<code>_start</code>，<code>_start</code>设置栈，并将控制传递给新程序的主函数。</p>
+<h2 id="6-5-Hello的进程执行"><a href="#6-5-Hello的进程执行" class="headerlink" title="6.5 Hello的进程执行"></a>6.5 Hello的进程执行</h2><p>在输入合适参数执行hello程序之后，hello进程一开始运行在用户模式。内核为hello维持一个上下文，它由一系列的值组成，这些对象包括通用目的寄存器、浮点寄存器、程序计数器、用户栈、状态寄存器、内核栈和各种内核数据结构（比如页表、进程表、文件表）。</p>
+<p>在hello运行时，也有一些其它进程在并行地运行，这些进程的逻辑流的执行时间与hello的逻辑流重叠，称为并发流。而一个进程和其它进程轮流运行的概念叫作多任务，一个进程执行它的控制流的一部分的每一时间段叫做时间片。因此，多任务也叫做时间分片。<br><img src="/images/2018-HIT-CSAPP-hello/t49.png" alt="pic49"><br>不久hello调用printf与sleep，这两个函数引发系统调用，系统调用使得进程从用户模式变为内核模式，处理程序运行在内核模式中，当它返回到应用程序代码时，处理器就把模式从内核模式改回到用户模式，而执行sleep系统调用时，内核可能会执行上下文切换而非将控制返回给hello进程。在切换的第一部分中，内核代表hello在内核模式下执行指令，然后在某一时刻，它开始代表另一个进程在内核模式下执行指令，在切换之后，内核代表那个进程在用户模式下执行指令。<br>而这个切换过程可以分为三个步骤<br>1) 保存当前进程的上下文<br>2) 恢复某个先前被抢占的进程被保存的上下文<br>3) 将控制传递给这个新恢复的进程。</p>
+<p><img src="/images/2018-HIT-CSAPP-hello/t50.png" alt="pic50"><br>这时我们说内核调度了一个新的进程，在内核调度了一个新的进程后，它就抢占了当前进程。<br>不仅仅是系统调用会导致上下文切换，中断也会。当hello执行了一段时间（通常是1-10ms）后，定时器引发的中断也会导致内核执行上下文切换并调度一个新的进程。<br>接下来的十秒中，内核继续执行上下文切换，轮流运行hello与其它进程，十次循环结束后，hello返回，程序终止。</p>
+<h2 id="6-6-hello的异常与信号处理"><a href="#6-6-hello的异常与信号处理" class="headerlink" title="6.6 hello的异常与信号处理"></a>6.6 hello的异常与信号处理</h2><h3 id="6-6-1-hello在运行时可能会出现的异常"><a href="#6-6-1-hello在运行时可能会出现的异常" class="headerlink" title="6.6.1 hello在运行时可能会出现的异常"></a>6.6.1 hello在运行时可能会出现的异常</h3><p><strong>故障</strong>：缺页异常 加载完成后hello进程的页表被映射到hello文件，但还未将实际代码拷贝至内存，在执行到相应地址的代码时会引发缺页异常，拷贝相关代码。<br><strong>中断</strong>：如来自键盘的信号（见下文） 定时器中断<br><strong>陷阱</strong>：系统调用造成，如sleep函数<br><strong>终止</strong>：不可恢复的错误，如hello执行时硬件被物理伤害造成奇偶校验错误。</p>
+<h3 id="6-6-2-hello在运行时可能会接受到的信号"><a href="#6-6-2-hello在运行时可能会接受到的信号" class="headerlink" title="6.6.2 hello在运行时可能会接受到的信号"></a>6.6.2 hello在运行时可能会接受到的信号</h3><p><strong>SIGINT 中断信号</strong> 当用户键入ctrl+c时会产生这个信号，接受这个信号，程序默认终止，如果有已经定义的handler，则会执行handler。<br><img src="/images/2018-HIT-CSAPP-hello/t51.png" alt="pic51"><br><strong>SIGTSTP 停止信号</strong> 当用户键入ctrl+z时会产生这个信号，接受这个信号的默认行为是中止程序，这个默认行为不可更改。<br><img src="/images/2018-HIT-CSAPP-hello/t52.png" alt="pic52"><br><strong>SIGKILL 终止信号</strong> 使用kill -9向hello发出这个信号，接受这个信号的默认行为是终止程序，这个默认行为不可更改。<br><img src="/images/2018-HIT-CSAPP-hello/t53.png" alt="pic53"><br><strong>SIGCHLD 子进程信号</strong> hello终止或中止时会向父进程（bash）发出这个信号。如果hello中止；则bash会将其标记为中止状态，如果hello已经终止，则bash会回收hello进程。</p>
+<h2 id="6-7本章小结"><a href="#6-7本章小结" class="headerlink" title="6.7本章小结"></a>6.7本章小结</h2><p>本章介绍了进程的概念与作用，并通过hello程序演示了进程的执行过程。<br>简要介绍了shell的工作流程，并分析了linux下的异常处理机制，介绍了应用程序的信号处理。</p>
+<p>shell执行程序是通过fork函数以及execve创建新的进程并执行程序的。<br>程序运行中可能会遇到异常，异常分为中断、陷阱、故障、终止四类，由异常处理子程序来处理，信号作为一种特殊的异常，实现了对程序运行终止等操作的控制。</p>
+<h1 id="第7章-hello的存储管理"><a href="#第7章-hello的存储管理" class="headerlink" title="第7章 hello的存储管理"></a>第7章 hello的存储管理</h1><h2 id="7-1-hello的存储器地址空间"><a href="#7-1-hello的存储器地址空间" class="headerlink" title="7.1 hello的存储器地址空间"></a>7.1 hello的存储器地址空间</h2><p><strong>逻辑地址空间</strong>：段地址：偏移地址<br>23：8048000 段寄存器（CS等16位）：偏移地址（16/32/64）</p>
+<ul>
+<li>实模式下：逻辑地址CS：EA=物理地址CS * 16 + EA</li>
+<li>保护模式下：以段描述符作为下标，到GDT/LDT表查表获得段地址，<br>段地址+偏移地址=线性地址。</li>
+</ul>
+<p><strong>线性地址空间</strong>: 非负整数地址的有序集合:：{0, 1, 2, 3 … }<br><strong>虚拟地址空间</strong>: N = 2n 个虚拟地址的集合=线性地址空间<br>{0, 1, 2, 3, …, N-1}<br><strong>物理地址空间</strong>: M = 2m 个物理地址的集合<br>    {0, 1, 2, 3, …, M-1}<br>Intel采用段页式存储管理（MMU实现）<br><strong>段式管理</strong>：  逻辑地址-&gt;线性地址==虚拟地址<br><strong>页式管理</strong>：  虚拟地址-&gt;物理地址</p>
+<h2 id="7-2-Intel逻辑地址到线性地址的变换-段式管理"><a href="#7-2-Intel逻辑地址到线性地址的变换-段式管理" class="headerlink" title="7.2 Intel逻辑地址到线性地址的变换-段式管理"></a>7.2 Intel逻辑地址到线性地址的变换-段式管理</h2><p>实模式下：逻辑地址CS：EA=物理地址CS * 16 + EA<br>保护模式下：以段描述符作为下标，到GDT/LDT表查表获得段地址，<br>段地址+偏移地址=线性地址。<br><img src="/images/2018-HIT-CSAPP-hello/t54.png" alt="pic54"></p>
+<h2 id="7-3-Hello的线性地址到物理地址的变换-页式管理"><a href="#7-3-Hello的线性地址到物理地址的变换-页式管理" class="headerlink" title="7.3 Hello的线性地址到物理地址的变换-页式管理"></a>7.3 Hello的线性地址到物理地址的变换-页式管理</h2><p>hello的线性地址到物理地址的变换需要查询页表得出，hello的线性地址被分成两个部分，第一部分虚拟页号VPN用于在页表查询物理页号PPN，而第二部分虚拟页偏移量VPO则与查询到的物理页号PPN一起组成物理地址。<br><img src="/images/2018-HIT-CSAPP-hello/t55.png" alt="pic55"></p>
+<h2 id="7-4-TLB与四级页表支持下的VA到PA的变换"><a href="#7-4-TLB与四级页表支持下的VA到PA的变换" class="headerlink" title="7.4 TLB与四级页表支持下的VA到PA的变换"></a>7.4 TLB与四级页表支持下的VA到PA的变换</h2><p><img src="/images/2018-HIT-CSAPP-hello/t56.png" alt="pic56"><br>虚拟地址VA被分成VPN和VPO两部分，VPN被分为TLBT和TLBI用于在TLB中查询。根据TLBI确定TLB中的组索引，并根据TLBT判断PPN是否已被缓存到TLB中，如果TLB命中，则直接返回PPN，否则会到页表中查询PPN。在页表中查询PPN时，VPN会被分为四个部分，分别用作一二三四级页表的索引，而前三级页表的查询结果为下一级页表的基地址，第四级页表的查询结果为PPN。将查询到的PPN与VPO组合，得到物理地址PA。</p>
+<h2 id="7-5-三级Cache支持下的物理内存访问"><a href="#7-5-三级Cache支持下的物理内存访问" class="headerlink" title="7.5 三级Cache支持下的物理内存访问"></a>7.5 三级Cache支持下的物理内存访问</h2><p>MMU发送物理地址PA给L1缓存，L1缓存从物理地址中抽取出缓存偏移CO、缓存组索引CI以及缓存标记CT。高速缓存根据CI找到缓存中的一组，并通过CT判断是否已经缓存地址对应的数据，若缓存命中，则根据偏移量直接从缓存中读取数据并返回；若缓存不命中，则继续从L2、L3缓存中查询，若仍未命中，则从主存中读取数据。</p>
+<h2 id="7-6-hello进程fork时的内存映射"><a href="#7-6-hello进程fork时的内存映射" class="headerlink" title="7.6 hello进程fork时的内存映射"></a>7.6 hello进程fork时的内存映射</h2><p>当fork函数被新进程调用时，内核为新进程创建各种数据结构，并分配给它唯一的PID。为了给这个新进程创建虚拟内存，它创建了当前进程的mm_struct、区域结构和页表的原样副本。它将两个进程中的每个页面都标记为只读，并将两个进程中的每个区域结构都标记为私有的写时复制。</p>
+<p>当fork在新进程中返回时，新进程现在的虚拟内存刚好和调用fork时存在的虚拟内存相同。当这两个进程中的任一个后来进行写操作时，写时复制机制就会创建新页面，因此，也就为每个进程保持了私有地址空间的抽象概念。</p>
+<h2 id="7-7-hello进程execve时的内存映射"><a href="#7-7-hello进程execve时的内存映射" class="headerlink" title="7.7 hello进程execve时的内存映射"></a>7.7 hello进程execve时的内存映射</h2><p>execve函数在当前进程中加载并运行包含在可执行文件hello中的程序，加载并运行hello时出现的内存映射有：</p>
+<ol>
+<li>映射私有区域 为新程序的代码、数据、bss和栈区域创建新的区域结构。所有这些新的区域都是私有的、写时复制的。代码和数据区域被映射为hello文件中的.text和.data区。Bss区域时请求二进制零的，映射到匿名文件，其大小包含在hello中。栈和堆区域也是请求二进制零的，初始长度为零。 </li>
+<li>映射共享区域 如果hello程序与共享对象（或目标链接），比如C库libc.so，那么这些对象都是动态链接到这个程序的，然后再映射到用户虚拟地址空间中的共享区域内。<br><img src="/images/2018-HIT-CSAPP-hello/t57.png" alt="pic57"></li>
+</ol>
+<h2 id="7-8-缺页故障与缺页中断处理"><a href="#7-8-缺页故障与缺页中断处理" class="headerlink" title="7.8 缺页故障与缺页中断处理"></a>7.8 缺页故障与缺页中断处理</h2><p><strong>缺页故障</strong>：虚拟内存中的字不在物理内存中（DRAM缓存不命中）<br>如下图，VP3已经被映射到页表中，但却没有被缓存到物理内存中，此时堆VP3的引用会引发缺页故障。<br><img src="/images/2018-HIT-CSAPP-hello/t58.png" alt="pic58"><br>缺页会导致页面出错引发一个缺页中断，而缺页异常处理程序会选择一个牺牲页（如下图选择了VP4，将VP4从内存交换到磁盘，并从磁盘读取VP3交换到物理内存）。<br><img src="/images/2018-HIT-CSAPP-hello/t59.png" alt="pic59"><br>此时令导致缺页的指令重新启动，就可以使得页面命中了。</p>
+<h2 id="7-9动态存储分配管理"><a href="#7-9动态存储分配管理" class="headerlink" title="7.9动态存储分配管理"></a>7.9动态存储分配管理</h2><p>printf会调用malloc，接下来提一下动态内存分配的基本原理。</p>
+<p>动态内存分配器维护着一个进程的虚拟内存区域，称为堆。系统之间细节不同，但是不失通用性，假设堆是一个请求二进制零的区域，它紧接在未初始化的数据区域后开始，并向上生长。对于每个进程，内核维护着一个变量brk，它指向堆的顶部。分配器将堆视为一组不同大小的块的集合来维护，每个块就是一个连续的需内存片，要么是已分配的，要么是空闲的。已分配的块显示地保留为供应用程序使用。空闲块可以用来分配。空闲块保持空闲，直到它显示地被应用所分配。一个已分配的块保持已分配状态，直到它被释放，这种释放要么是应用程序显示执行的，要么是内存分配器自身隐式执行的。</p>
+<p>两种堆的数据结构组织形式：</p>
+<h4 id="带标签的隐式空闲链表"><a href="#带标签的隐式空闲链表" class="headerlink" title="带标签的隐式空闲链表"></a>带标签的隐式空闲链表</h4><p>带标签的隐式空闲链表的数据组织方式如下图：<br><img src="/images/2018-HIT-CSAPP-hello/t60.png" alt="pic60"><br>空闲块是通过头部中的大小字段隐含地连接着的。分配器可以通过遍历堆中所有的块，从而间接地遍历整个空闲块的集合。</p>
+<h4 id="显式空闲链表"><a href="#显式空闲链表" class="headerlink" title="显式空闲链表"></a>显式空闲链表</h4><p>显式空闲链表将链表的指针存放在空闲块的主体里面。堆被组织成一个双向空闲链表，在每个空闲块中，都包含一个pred和succ指针，如下图所示：<br><img src="/images/2018-HIT-CSAPP-hello/t61.png" alt="pic61"></p>
+<h2 id="7-10本章小结"><a href="#7-10本章小结" class="headerlink" title="7.10本章小结"></a>7.10本章小结</h2><p>现代操作系统多采用虚拟内存系统，访存时地址需要从逻辑地址翻译到虚拟地址并进一步翻译成物理地址。<br>操作系统通过地址的页式管理来实现对磁盘的缓存、内存管理、内存保护等功能。<br>虚拟内存为便捷的加载、进程管理提供了可能。<br>程序运行过程中往往涉及动态内存分配，动态内存分配通过动态内存分配器完成。</p>
+<h1 id="第8章-hello的IO管理"><a href="#第8章-hello的IO管理" class="headerlink" title="第8章 hello的IO管理"></a>第8章 hello的IO管理</h1><h2 id="8-1-Linux的IO设备管理方法"><a href="#8-1-Linux的IO设备管理方法" class="headerlink" title="8.1 Linux的IO设备管理方法"></a>8.1 Linux的IO设备管理方法</h2><p>一个linux文件就是一个m个字节的序列：<br>    <strong>B0, B1, … Bk, …, Bm-1</strong></p>
+<p>所有的I/O设备（例如网络、磁盘和终端）都被模型化为文件，而所有的输入和输出都被当做对相应文件的读和写来执行。这种将设备优雅地映射为文件的方式，允许linux内核引出一个简单、低级的应用接口，称为Unix I/O，这使得所有的输入和输出都能以一种统一且一致的方式来执行：UNIX I/O。</p>
+<h2 id="8-2-简述Unix-IO接口及其函数"><a href="#8-2-简述Unix-IO接口及其函数" class="headerlink" title="8.2 简述Unix IO接口及其函数"></a>8.2 简述Unix IO接口及其函数</h2><h4 id="打开和关闭文件"><a href="#打开和关闭文件" class="headerlink" title="打开和关闭文件"></a>打开和关闭文件</h4><p><code>int open(char *filename, int flags, mode_t mode);</code><br>open函数将filename转换为一个文件描述符，并返回描述符数字。返回的描述符总是在进程中当前没有打开的最小描述符。flags参数指明了进程打算如何访问这个文件，mode参数指定了新文件的访问权限位。<br><code>int close(int fd);</code><br>进程通过调用close关闭一个打开的文件。</p>
+<h4 id="读和写文件"><a href="#读和写文件" class="headerlink" title="读和写文件"></a>读和写文件</h4><p><code>ssize_t read(int fd, void *buf, size_t n);</code><br>read函数从描述符为fd的当前文件位置复制最多n个字节到内存位置buf。返回值-1表示一个错误，而返回值0表示EOF。否则，返回值表示的是实际传送的字节数量。<br><code>ssize_t write(int fd, const void *buf, size_t n);</code><br>write函数从内存位置buf复制之多n个字节到描述符fd的当前文件位置。<br><code>DIO *opendir(const char *name);</code><br>函数opendir以路径名为参数，返回指向目录流的指针。流是对条目有序列表的抽象，在这里是指目录项的列表。<br><code>struct dirent *readdir(DIR *dirp);</code><br>每次对readdir的调用返回的都是指向流dirp中下一个目录项的指针，或者，如果没有更过目录项则返回NULL。<br><code>int closedir(DIR *dirp);</code><br>函数closedir关闭流并释放其所有的资源。</p>
+<h4 id="I-O重定向"><a href="#I-O重定向" class="headerlink" title="I/O重定向"></a>I/O重定向</h4><p><code>int dup2(int oldfd, int newfd);</code><br>dup2函数复制描述符表表项oldfd到描述符表项newfd，覆盖描述符表表项newfd以前的内容。如果newfd已经打开了，dup2会在复制oldfd之前关闭newfd。</p>
+<h2 id="8-3-printf的实现分析"><a href="#8-3-printf的实现分析" class="headerlink" title="8.3 printf的实现分析"></a>8.3 printf的实现分析</h2><p>printf函数的实现大致与下面代码一致：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">printf</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">256</span>];</span><br><span class="line"></span><br><span class="line">    va_list arg = (va_list)((<span class="keyword">char</span> *)(&amp;fmt) + <span class="number">4</span>);</span><br><span class="line">    i = <span class="built_in">vsprintf</span>(buf, fmt, arg);</span><br><span class="line">    write(buf, i);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中va_list_arg是边长参数列表中的第一个参数的地址，vsprintf的作用是以fmt作为格式字符串，根据arg中的参数，向buf中输出格式化后的字符串。write则是Unix I/O接口，它将栈中参数存入寄存器，并由它来进行系统调用。write的实现大致如下，其中ecx是字符个数，ebx存放第一个字符地址：<br>write:<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   mov eax, _NR_write</span><br><span class="line">   mov ebx, [esp + 4]</span><br><span class="line">   mov ecx, [esp + 8]</span><br><span class="line">int INT_VECTOR_SYS_CALL</span><br></pre></td></tr></table></figure></p>
+<p>接下来syscall将字符串从寄存器中通过总线复制到显卡显存中。字符显示驱动子程序通过ASCII码在字模库中找到点阵信息并将其存储到vram中。接下来显示芯片按照刷新频率逐行读取vram，并通过信号线向液晶显示器传输每一个点（RGB分量）。此时字符串就被打印到了屏幕上。</p>
+<h2 id="8-4-getchar的实现分析"><a href="#8-4-getchar的实现分析" class="headerlink" title="8.4 getchar的实现分析"></a>8.4 getchar的实现分析</h2><p>getchar函数的大致实现如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getchar</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">    <span class="keyword">return</span> (read(<span class="number">0</span>,&amp;c,<span class="number">1</span>)==<span class="number">1</span>)?(<span class="keyword">unsigned</span> <span class="keyword">char</span>)c:EOF</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>getchar函数通过调用read函数来读取字符。read函数由三个参数，第一个参数为文件描述符fd，fd为0表示标准输入；第二个参数为输入内容的指针；第三个参数为读入字符的个数。read函数的返回值是读入字符的个数，若出错则返回-1。</p>
+<p>当用户按键时，键盘接口会产生一个键盘扫描码和一个中断请求，中断处理程序会从键盘接口取得按键扫描码并把它转换成ASCII码，保存到系统的键盘缓冲区。</p>
+<p>read执行一个系统调用，按照系统调用从键盘缓冲区读取按键ASCII码，直到接受到回车键才返回。</p>
+<h2 id="8-5本章小结"><a href="#8-5本章小结" class="headerlink" title="8.5本章小结"></a>8.5本章小结</h2><p>I/O时在主存和外部设备之间复制数据的过程。在Linux中，I/O的实现是通过Unix I/O函数来执行的。Linux把所有的I/O设备模型化为文件，并提供统一的Unix I/O接口，这使得所有的输入输出都能以一种统一且一致的方式来执行。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><h1 id="hello的一生"><a href="#hello的一生" class="headerlink" title="hello的一生"></a>hello的一生</h1><ol>
+<li>用户从键盘输入，得到hello.c源文件。</li>
+<li>编译器和汇编器对hello.c进行预处理，然后对其进行编译和汇编，得到可重定位目标文件hello.o。</li>
+<li>链接器对hello.o进行链接，并得到可执行目标文件hello，此时hello已经可以被操作系统加载和执行。</li>
+<li>bash执行hello，首先bash会fork一个进程，然后在这个新的进程中execve hello，execve会清空当前进程的数据并加载hello，然后把rip指向hello的程序入口，把控制权交给hello。</li>
+<li>hello与许多进程并行执行，执行过程中由于系统调用或者计时器中断，会导致上下文切换，内核会选择另一个进程进行调度，并抢占当前的hello进程。</li>
+<li>hello执行的过程中可能收到来自键盘或者其它进程的信号，当收到信号时hello会调用信号处理程序来进行处理，可能出现的行为有停止终止忽略等。</li>
+<li>hello输出信息时需要调用printf和getchar，而printf和getchar的实现需要调用Unix I/O中的write和read函数，而它们的实现需要借助系统调用。</li>
+<li>hello中的访存操作，需要经历逻辑地址到线性地址最后到物理地址的变换，而访问物理地址的数据可能已被缓存至高速缓冲区，也可能位于主存中，也可能位于磁盘中等待被交换到主存。</li>
+<li>hello结束进程后，bash作为hello的父进程会回收hello进程。</li>
+</ol>
+<p>在Kernighan和Ritchie的关于C编程语言的经典教材中，他们通过一个简单的hello程序来向读者介绍C。尽管hello非常简单，但是为了让它实现运行，系统的每个主要组成部分都需要协调工作。从某种意义上来说，计算机系统课程的学习，就是让我们了解当在系统上执行hello程序时，系统发生了什么以及为什么会这样。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机组成原理/" rel="tag"># 计算机组成原理</a>
+          
+            <a href="/tags/汇编/" rel="tag"># 汇编</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/archives/20320.html" rel="next" title="计蒜客31445 (Made In Heaven)[A*，第K最短路]">
+                <i class="fa fa-chevron-left"></i> 计蒜客31445 (Made In Heaven)[A*，第K最短路]
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/archives/4111.html" rel="prev" title="\[2019春软件构造\]面向可复用的软件构造">
+                \[2019春软件构造\]面向可复用的软件构造 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="mhlwsk">
+            
+              <p class="site-author-name" itemprop="name">mhlwsk</p>
+              <p class="site-description motion-element" itemprop="description">I will persist until I win.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">118</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/mhlwsk" title="GitHub &rarr; https://github.com/mhlwsk" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:muhonglinyt@126.com" title="E-Mail &rarr; mailto:muhonglinyt@126.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://morisearu.top" title="http://morisearu.top" rel="external nofollow noopener noreferrer" target="_blank">离光</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#摘-要"><span class="nav-number">1.</span> <span class="nav-text">摘  要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第1章-概述"><span class="nav-number">2.</span> <span class="nav-text">第1章 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Hello简介"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Hello简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-环境与工具"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-中间结果"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 中间结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-本章小结"><span class="nav-number">2.4.</span> <span class="nav-text">1.4 本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第2章-预处理"><span class="nav-number">3.</span> <span class="nav-text">第2章 预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-预处理的概念与作用"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 预处理的概念与作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2在Ubuntu下预处理的命令"><span class="nav-number">3.2.</span> <span class="nav-text">2.2在Ubuntu下预处理的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-Hello的预处理结果解析"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 Hello的预处理结果解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-本章小结"><span class="nav-number">3.4.</span> <span class="nav-text">2.4 本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第3章-编译"><span class="nav-number">4.</span> <span class="nav-text">第3章 编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-编译的概念与作用"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 编译的概念与作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-在Ubuntu下编译的命令"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 在Ubuntu下编译的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Hello的编译结果解析"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 Hello的编译结果解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1-hello-s中出现的标识"><span class="nav-number">4.3.1.</span> <span class="nav-text">3.3.1 hello.s中出现的标识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-2-数据类型"><span class="nav-number">4.3.2.</span> <span class="nav-text">3.3.2 数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#整数类型"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">整数类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串和字符指针数组"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">字符串和字符指针数组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3运算与操作"><span class="nav-number">4.3.3.</span> <span class="nav-text">3.3.3运算与操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#赋值操作"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">赋值操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#比较操作"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">比较操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算术运算"><span class="nav-number">4.3.3.3.</span> <span class="nav-text">算术运算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组操作"><span class="nav-number">4.3.3.4.</span> <span class="nav-text">数组操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-4控制转移"><span class="nav-number">4.3.4.</span> <span class="nav-text">3.3.4控制转移</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#if语句"><span class="nav-number">4.3.4.1.</span> <span class="nav-text">if语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for循环"><span class="nav-number">4.3.4.2.</span> <span class="nav-text">for循环</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-5-函数调用"><span class="nav-number">4.3.5.</span> <span class="nav-text">3.3.5 函数调用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-本章小结"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第4章-汇编"><span class="nav-number">5.</span> <span class="nav-text">第4章 汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-汇编的概念与作用"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 汇编的概念与作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-在Ubuntu下汇编的命令"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 在Ubuntu下汇编的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-可重定位目标elf格式"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 可重定位目标elf格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-Hello-o的结果解析"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 Hello.o的结果解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-本章小结"><span class="nav-number">5.5.</span> <span class="nav-text">4.5 本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第5章-链接"><span class="nav-number">6.</span> <span class="nav-text">第5章 链接</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-链接的概念与作用"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 链接的概念与作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-在Ubuntu下链接的命令"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 在Ubuntu下链接的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-可执行目标文件hello的格式"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 可执行目标文件hello的格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hello的ELF头"><span class="nav-number">6.3.0.1.</span> <span class="nav-text">hello的ELF头</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#段头部表"><span class="nav-number">6.3.0.2.</span> <span class="nav-text">段头部表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-hello的虚拟地址空间"><span class="nav-number">6.4.</span> <span class="nav-text">5.4 hello的虚拟地址空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-链接的重定位过程分析"><span class="nav-number">6.5.</span> <span class="nav-text">5.5 链接的重定位过程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-hello的执行流程"><span class="nav-number">6.6.</span> <span class="nav-text">5.6 hello的执行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7-Hello的动态链接分析"><span class="nav-number">6.7.</span> <span class="nav-text">5.7 Hello的动态链接分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-8-本章小结"><span class="nav-number">6.8.</span> <span class="nav-text">5.8 本章小结</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#第6章-hello进程管理"><span class="nav-number">7.</span> <span class="nav-text">第6章 hello进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-进程的概念与作用"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 进程的概念与作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-简述壳Shell-bash的作用与处理流程"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 简述壳Shell-bash的作用与处理流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-Hello的fork进程创建过程"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 Hello的fork进程创建过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-Hello的execve过程"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 Hello的execve过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5-Hello的进程执行"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 Hello的进程执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-6-hello的异常与信号处理"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 hello的异常与信号处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-1-hello在运行时可能会出现的异常"><span class="nav-number">7.6.1.</span> <span class="nav-text">6.6.1 hello在运行时可能会出现的异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-2-hello在运行时可能会接受到的信号"><span class="nav-number">7.6.2.</span> <span class="nav-text">6.6.2 hello在运行时可能会接受到的信号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-7本章小结"><span class="nav-number">7.7.</span> <span class="nav-text">6.7本章小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第7章-hello的存储管理"><span class="nav-number">8.</span> <span class="nav-text">第7章 hello的存储管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-hello的存储器地址空间"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 hello的存储器地址空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-Intel逻辑地址到线性地址的变换-段式管理"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 Intel逻辑地址到线性地址的变换-段式管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-Hello的线性地址到物理地址的变换-页式管理"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 Hello的线性地址到物理地址的变换-页式管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-TLB与四级页表支持下的VA到PA的变换"><span class="nav-number">8.4.</span> <span class="nav-text">7.4 TLB与四级页表支持下的VA到PA的变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-5-三级Cache支持下的物理内存访问"><span class="nav-number">8.5.</span> <span class="nav-text">7.5 三级Cache支持下的物理内存访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-6-hello进程fork时的内存映射"><span class="nav-number">8.6.</span> <span class="nav-text">7.6 hello进程fork时的内存映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-7-hello进程execve时的内存映射"><span class="nav-number">8.7.</span> <span class="nav-text">7.7 hello进程execve时的内存映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-8-缺页故障与缺页中断处理"><span class="nav-number">8.8.</span> <span class="nav-text">7.8 缺页故障与缺页中断处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-9动态存储分配管理"><span class="nav-number">8.9.</span> <span class="nav-text">7.9动态存储分配管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#带标签的隐式空闲链表"><span class="nav-number">8.9.0.1.</span> <span class="nav-text">带标签的隐式空闲链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#显式空闲链表"><span class="nav-number">8.9.0.2.</span> <span class="nav-text">显式空闲链表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-10本章小结"><span class="nav-number">8.10.</span> <span class="nav-text">7.10本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第8章-hello的IO管理"><span class="nav-number">9.</span> <span class="nav-text">第8章 hello的IO管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1-Linux的IO设备管理方法"><span class="nav-number">9.1.</span> <span class="nav-text">8.1 Linux的IO设备管理方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-简述Unix-IO接口及其函数"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 简述Unix IO接口及其函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#打开和关闭文件"><span class="nav-number">9.2.0.1.</span> <span class="nav-text">打开和关闭文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#读和写文件"><span class="nav-number">9.2.0.2.</span> <span class="nav-text">读和写文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#I-O重定向"><span class="nav-number">9.2.0.3.</span> <span class="nav-text">I/O重定向</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-printf的实现分析"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 printf的实现分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4-getchar的实现分析"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 getchar的实现分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-5本章小结"><span class="nav-number">9.5.</span> <span class="nav-text">8.5本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">10.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hello的一生"><span class="nav-number">11.</span> <span class="nav-text">hello的一生</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mhlwsk</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="external nofollow noopener noreferrer" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://mhlwsk.disqus.com/count.js" async></script>
+  
+
+  
+    <script>
+      var disqus_config = function () {
+        this.page.url = "https://www.mhlwsk.com/archives/44834.html";
+        this.page.identifier = "archives/44834.html";
+        this.page.title = '[2018 HIT CSAPP大作业] 程序人生 Hello’s P2P';
+        };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mhlwsk.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+      }
+      else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src>
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":75,"height":150,"vOffset":-35},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
