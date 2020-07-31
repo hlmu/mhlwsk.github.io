@@ -100,18 +100,18 @@
 
 
 
-  <meta name="description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x  \omega$$上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下：$$\hat{y} = x  \omega + b$$ Training Loss(Error)$$loss =">
+  <meta name="description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x * \omega$$ 上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下： $$\hat{y} = x * \omega + b$$ Training Loss(Error)$$los">
 <meta name="keywords" content="PyTorch,深度学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《PyTorch深度学习实践》2.线性模型 笔记">
 <meta property="og:url" content="https://www.mhlwsk.com/archives/21981.html">
 <meta property="og:site_name" content="木屋">
-<meta property="og:description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x  \omega$$上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下：$$\hat{y} = x  \omega + b$$ Training Loss(Error)$$loss =">
+<meta property="og:description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x * \omega$$ 上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下： $$\hat{y} = x * \omega + b$$ Training Loss(Error)$$los">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-31T14:41:43.727Z">
+<meta property="og:updated_time" content="2020-07-31T14:47:50.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《PyTorch深度学习实践》2.线性模型 笔记">
-<meta name="twitter:description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x  \omega$$上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下：$$\hat{y} = x  \omega + b$$ Training Loss(Error)$$loss =">
+<meta name="twitter:description" content="线性模型基本流程 Dataset traing set, dev set, test set Model Training infering  线性模型Linear model$$\hat{y} = x * \omega$$ 上面是本次实验中用到的更一般的线性模型要加一个偏置b，形式如下： $$\hat{y} = x * \omega + b$$ Training Loss(Error)$$los">
 
 
 
@@ -405,7 +405,7 @@
                 
               
 
-              <time title="创建时间：2020-07-31 00:31:17 / 修改时间：22:41:43" itemprop="dateCreated datePublished" datetime="2020-07-31T00:31:17+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 00:31:17 / 修改时间：22:47:50" itemprop="dateCreated datePublished" datetime="2020-07-31T00:31:17+08:00">2020-07-31</time>
             
 
             
@@ -467,7 +467,9 @@
 <li>Training</li>
 <li>infering</li>
 </ol>
-<h2 id="线性模型-1"><a href="#线性模型-1" class="headerlink" title="线性模型"></a>线性模型</h2><h3 id="Linear-model"><a href="#Linear-model" class="headerlink" title="Linear model"></a>Linear model</h3><p>$$<br>\hat{y} = x <em> \omega<br>$$<br>上面是本次实验中用到的<br>更一般的线性模型要加一个偏置b，形式如下：<br>$$<br>\hat{y} = x </em> \omega + b<br>$$</p>
+<h2 id="线性模型-1"><a href="#线性模型-1" class="headerlink" title="线性模型"></a>线性模型</h2><h3 id="Linear-model"><a href="#Linear-model" class="headerlink" title="Linear model"></a>Linear model</h3><p>$$<br>\hat{y} = x * \omega<br>$$</p>
+<p>上面是本次实验中用到的<br>更一般的线性模型要加一个偏置b，形式如下：</p>
+<p>$$<br>\hat{y} = x * \omega + b<br>$$</p>
 <h3 id="Training-Loss-Error"><a href="#Training-Loss-Error" class="headerlink" title="Training Loss(Error)"></a>Training Loss(Error)</h3><p>$$<br>loss = (\hat{y}-y)^2=(x*\omega-y)^2<br>$$<br>这是针对每一个样本的</p>
 <a id="more"></a>
 <h3 id="Mean-Square-Error"><a href="#Mean-Square-Error" class="headerlink" title="Mean Square Error"></a>Mean Square Error</h3><p>$$<br>cost = \frac{1}{N}\Sigma_{n=1}^{N}(\hat{y_n}-y_n)^2<br>$$<br>这是针对整个测试集的</p>
@@ -523,8 +525,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/archives/28068.html" rel="prev" title="《PyTorch深度学习实践》3.线性模型 笔记.md">
-                《PyTorch深度学习实践》3.线性模型 笔记.md <i class="fa fa-chevron-right"></i>
+              <a href="/archives/17385.html" rel="prev" title="《PyTorch深度学习实践》3.逻辑斯蒂回归 笔记.md">
+                《PyTorch深度学习实践》3.逻辑斯蒂回归 笔记.md <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
