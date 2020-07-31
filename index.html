@@ -361,7 +361,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/21981.html">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/28068.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="mhlwsk">
@@ -381,7 +381,7 @@
           <h2 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/archives/21981.html" class="post-title-link" itemprop="url">《PyTorch深度学习实践》线性模型 笔记</a>
+                <a href="/archives/28068.html" class="post-title-link" itemprop="url">《PyTorch深度学习实践》3.线性模型 笔记.md</a>
               
             
           </h2>
@@ -406,7 +406,167 @@
                 
               
 
-              <time title="创建时间：2020-07-31 00:31:17 / 修改时间：00:37:28" itemprop="dateCreated datePublished" datetime="2020-07-31T00:31:17+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 22:36:00 / 修改时间：22:43:20" itemprop="dateCreated datePublished" datetime="2020-07-31T22:36:00+08:00">2020-07-31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/28068.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/28068.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="逻辑斯蒂回归"><a href="#逻辑斯蒂回归" class="headerlink" title="逻辑斯蒂回归"></a>逻辑斯蒂回归</h1><p>逻辑斯蒂回归是一个<strong>分类模型</strong></p>
+<h2 id="分类问题"><a href="#分类问题" class="headerlink" title="分类问题"></a>分类问题</h2><p>相比于回归，分类问题的结果是离散的值（或者类别的概率）</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/28068.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/21981.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/21981.html" class="post-title-link" itemprop="url">《PyTorch深度学习实践》2.线性模型 笔记</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-31 00:31:17 / 修改时间：22:41:43" itemprop="dateCreated datePublished" datetime="2020-07-31T00:31:17+08:00">2020-07-31</time>
             
 
             
@@ -456,8 +616,7 @@
 
       
         
-          
-            <h1 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h1><h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><ol>
+          <h1 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h1><h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><ol>
 <li>Dataset<br> <code>traing set</code>, <code>dev set</code>, <code>test set</code></li>
 <li>Model</li>
 <li>Training</li>
@@ -465,13 +624,15 @@
 </ol>
 <h2 id="线性模型-1"><a href="#线性模型-1" class="headerlink" title="线性模型"></a>线性模型</h2><h3 id="Linear-model"><a href="#Linear-model" class="headerlink" title="Linear model"></a>Linear model</h3><p>$$<br>\hat{y} = x <em> \omega<br>$$<br>上面是本次实验中用到的<br>更一般的线性模型要加一个偏置b，形式如下：<br>$$<br>\hat{y} = x </em> \omega + b<br>$$</p>
 <h3 id="Training-Loss-Error"><a href="#Training-Loss-Error" class="headerlink" title="Training Loss(Error)"></a>Training Loss(Error)</h3><p>$$<br>loss = (\hat{y}-y)^2=(x*\omega-y)^2<br>$$<br>这是针对每一个样本的</p>
-<h3 id="Mean-Square-Error"><a href="#Mean-Square-Error" class="headerlink" title="Mean Square Error"></a>Mean Square Error</h3><p>$$<br>cost = \frac{1}{N}\Sigma_{n=1}^{N}(\hat{y_n}-y_n)^2<br>$$<br>这是针对整个测试集的</p>
-<h3 id="实验中所采用代码"><a href="#实验中所采用代码" class="headerlink" title="实验中所采用代码"></a>实验中所采用代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x_data = [<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>]</span><br><span class="line">y_data = [<span class="number">2.0</span>, <span class="number">4.0</span>, <span class="number">6.0</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(x)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> x * w</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(x, y)</span>:</span></span><br><span class="line">  y_pred = forward(x)</span><br><span class="line">  <span class="keyword">return</span> (y_pred - y) * (y_pred - y)</span><br><span class="line"></span><br><span class="line">w_list = []</span><br><span class="line">mse_list = []</span><br><span class="line"><span class="keyword">for</span> w <span class="keyword">in</span> np.arange(<span class="number">0.0</span>, <span class="number">4.1</span>, <span class="number">0.1</span>):</span><br><span class="line">  print(<span class="string">'w='</span>, w)</span><br><span class="line">  l_sum =<span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> x_val, y_val <span class="keyword">in</span> zip(x_data, y_data):</span><br><span class="line">    y_pred_val = forward(x_val)</span><br><span class="line">    loss_val = loss(x_val, y_val)</span><br><span class="line">    l_sum += loss_val</span><br><span class="line">    print(<span class="string">'\t'</span>, x_val, y_val, y_pred_val, loss_val)</span><br><span class="line">  print(<span class="string">'MSE='</span>, l_sum / <span class="number">3</span>)</span><br><span class="line">  w_list.append(w)</span><br><span class="line">  mse_list.append(l_sum / <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">plt.plot(w_list, mse_list)</span><br><span class="line">plt.ylabel(<span class="string">'Loss'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'w'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>其中对于参数w是采用枚举的方式来找的，实际不会采用这个做法。但调超参的话理论上可以用类似暴力的做法（虽然如果在公用机器上这么做会被骂）</p>
-<p><a href="https://colab.research.google.com/drive/1_bwu8HW5jVRRaHwLURPaMkopz6ZwIBTp?usp=sharing" rel="external nofollow noopener noreferrer" target="_blank">在Colab上运行</a></p>
-<p>课程来源：<a href="https://www.bilibili.com/video/BV1Y7411d7Ys?p=2" rel="external nofollow noopener noreferrer" target="_blank">《PyTorch深度学习实践》完结合集</a></p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/21981.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -546,7 +707,7 @@
           <h2 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/archives/5957.html" class="post-title-link" itemprop="url">《PyTorch深度学习实践》Overview 笔记</a>
+                <a href="/archives/5957.html" class="post-title-link" itemprop="url">《PyTorch深度学习实践》1.Overview 笔记</a>
               
             
           </h2>
@@ -571,7 +732,7 @@
                 
               
 
-              <time title="创建时间：2020-07-31 00:27:18 / 修改时间：00:35:54" itemprop="dateCreated datePublished" datetime="2020-07-31T00:27:18+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 00:27:18 / 修改时间：22:41:10" itemprop="dateCreated datePublished" datetime="2020-07-31T00:27:18+08:00">2020-07-31</time>
             
 
             
@@ -621,8 +782,7 @@
 
       
         
-          
-            <h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><h2 id="几种思维方式"><a href="#几种思维方式" class="headerlink" title="几种思维方式"></a>几种思维方式</h2><h3 id="算法课"><a href="#算法课" class="headerlink" title="算法课"></a>算法课</h3><p>计算过程来自人工设计</p>
+          <h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><h2 id="几种思维方式"><a href="#几种思维方式" class="headerlink" title="几种思维方式"></a>几种思维方式</h2><h3 id="算法课"><a href="#算法课" class="headerlink" title="算法课"></a>算法课</h3><p>计算过程来自人工设计</p>
 <ul>
 <li>穷举法</li>
 <li>贪心法</li>
@@ -635,32 +795,15 @@
 <li>Data</li>
 <li>DataSet</li>
 </ul>
-<h2 id="人工智能领域分类（出自Deep-learning-by-Bengio）"><a href="#人工智能领域分类（出自Deep-learning-by-Bengio）" class="headerlink" title="人工智能领域分类（出自Deep learning by Bengio）"></a>人工智能领域分类（出自<em>Deep learning by Bengio</em>）</h2><p><img src="/images/1. Overview 笔记.assets/image-20200727220619808.png" alt="image-20200727220619808"></p>
-<p>注意这里面的表示学习，早期方法如shallow autoencoders</p>
-<h3 id="基于规则的系统（早期人工智能方案）"><a href="#基于规则的系统（早期人工智能方案）" class="headerlink" title="基于规则的系统（早期人工智能方案）"></a>基于规则的系统（早期人工智能方案）</h3><p><img src="/images/1. Overview 笔记.assets/image-20200727221448608.png" alt="image-20200727221448608"></p>
-<h3 id="传统机器学习"><a href="#传统机器学习" class="headerlink" title="传统机器学习"></a>传统机器学习</h3><p><img src="/images/1. Overview 笔记.assets/image-20200727221550455.png" alt="image-20200727221550455"></p>
-<p>这里强调Hand-designed feature，特征需人工提取。曾经较火的模型如SVM。</p>
-<p><img src="/images/1. Overview 笔记.assets/image-20200727223034331.png" alt="image-20200727223034331"></p>
-<h4 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h4><ul>
-<li>手动设计的特征有限</li>
-<li>SVM对大数据集处理能力有限</li>
-<li>许多应用需要处理无结构数据，机器学习对这类数据需要手动构建特征</li>
-</ul>
-<h3 id="表示学习（Representation-learning）"><a href="#表示学习（Representation-learning）" class="headerlink" title="表示学习（Representation learning）"></a>表示学习（Representation learning）</h3><blockquote>
-<p>补充：维度诅咒</p>
-<p>feature增加，对样本数要求非线性增加<br>对应的需求：压缩维度</p>
-</blockquote>
-<p>表示学习希望能用低维空间表示高维空间的信息。方法如<em>Manifold流形</em>。</p>
-<p><img src="/images/1. Overview 笔记.assets/image-20200727222431377.png" alt="image-20200727222431377"></p>
-<p>深度学习所利用的特征更加简单了，不需要手动提取feature。Deep learning的训练过程是end-to-end的<br>目前的神经网络，来源于神经科学，但应用上更接近于数学和工程学<br>神经网络最重要的算法是back-propagation，基于计算图</p>
-<h3 id="深度学习近几年的发展"><a href="#深度学习近几年的发展" class="headerlink" title="深度学习近几年的发展"></a>深度学习近几年的发展</h3><ul>
-<li>算法更新</li>
-<li>数据增多</li>
-<li>算力变强</li>
-</ul>
-<p>课程来源：<a href="https://www.bilibili.com/video/BV1Y7411d7Ys?p=1" rel="external nofollow noopener noreferrer" target="_blank">《PyTorch深度学习实践》完结合集</a></p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/5957.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1973,178 +2116,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/28241.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/28241.html" class="post-title-link" itemprop="url">POJ3678 (Katu Puzzle)[2-SAT]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-09-01 10:26:29" itemprop="dateCreated datePublished" datetime="2018-09-01T10:26:29+08:00">2018-09-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/28241.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/28241.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://poj.org/problem?id=3678" rel="external nofollow noopener noreferrer" target="_blank">http://poj.org/problem?id=3678</a></p>
-<p>2-SAT模板题，注意四种条件中a &amp; b = 1和a | b = 0的情况，前者需要u^1 -&gt; u, v^1 -&gt; v连边，后者需要u -&gt; u^1, v -&gt; v^1连边。<br>相当于无论如何都要选u^1（无论如何都要选v^1）。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/28241.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2194,7 +2165,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">118</span>
+                    <span class="site-state-item-count">119</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
