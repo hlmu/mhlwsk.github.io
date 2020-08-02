@@ -361,6 +361,190 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/15576.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/15576.html" class="post-title-link" itemprop="url">CodeForces 603C (Lieges of Legendre)[公平组合博弈，SG函数]</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-19 09:03:34" itemprop="dateCreated datePublished" datetime="2018-08-19T09:03:34+08:00">2018-08-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/15576.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/15576.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>题目链接：</strong><a href="http://codeforces.com/problemset/problem/603/C" rel="external nofollow noopener noreferrer" target="_blank">http://codeforces.com/problemset/problem/603/C</a></p>
+<p>这题是公平组合博弈。对于给定的每堆奶牛，有两种操作，一是减少一只奶牛，二是将奶牛减半并变成k堆。其实第二种操作就相当于游戏分成了许多子游戏，子游戏的SG异或和仍然对应游戏的SG值。<br>这题最关键的思路是要想到k分奇偶讨论，然后打表找一下规律。</p>
+<blockquote>
+<p>如果k是偶数</p>
+</blockquote>
+<blockquote>
+<p>当选择2时，有k个n个石子的小堆，状态的sg函数显然为f(n) xor自身 k次=0。<br>此时我们可以计算得出f(0..4)={0,1,2,0,1}，并且可证明对于n&gt;=2，有f(2n-1)=0，f(2n)=1，化简得f(n)=1-(n%2)，或f(n)=n&amp;1^1。<br>对于f(2n-1)，我们只能移动到2n-2个石子的状态（游戏1），又f(2n-2)=1&gt;0，所以f(2n-1)=mex{1}=0。<br>对于f(2n)，可以移动到2n-1的状态（游戏1），或者游戏2，游戏1和2的sg函数值都为0，所以f(2n)=mex{0}=1。</p>
+</blockquote>
+<blockquote>
+<p>如果k是奇数</p>
+</blockquote>
+<blockquote>
+<p>此时对于2n个石子的石堆，状态的sg函数为f(n)xor自身k次=f(n)。推导出f(0..5)={0,1,0,1,2,0}。可证明对于n&gt;=2，f(2n)&gt;0，f(2n+1)=0。<br>对于f(2n+1)，我们只能移动到2n，有f(2n)&gt;0，所以f(2n+1)=0。<br>对于f(2n)，可以移动到2n-1，f(2n-1)=0，所以f(2n)&gt;0。且f(2n)=mex{f(2n-1),f(n)}=mex{0,f(n)}，递归计算即可。<br>引用自<a href="https://blog.csdn.net/riba2534/article/details/78483562" rel="external nofollow noopener noreferrer" target="_blank">huanghongxun的博客</a></p>
+</blockquote>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/15576.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/62187.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1900,178 +2084,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/20184.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/20184.html" class="post-title-link" itemprop="url">HDU1068 (Girls and Boys)[二分图匹配，匈牙利算法]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-14 20:08:27" itemprop="dateCreated datePublished" datetime="2018-08-14T20:08:27+08:00">2018-08-14</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/20184.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/20184.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://acm.hdu.edu.cn/showproblem.php?pid=1068" rel="external nofollow noopener noreferrer" target="_blank">http://acm.hdu.edu.cn/showproblem.php?pid=1068</a></p>
-<p>这题是求二分图最大点独立集，二分图最大点独立集=n-最大匹配。<br>要注意的是这题没有区分两种颜色的结点，因此算出的最大匹配要除2。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/20184.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2121,7 +2133,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">119</span>
+                    <span class="site-state-item-count">120</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2294,7 +2306,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">79</span>
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2952,7 +2966,24 @@
 .MathJax_Display {
   overflow: auto hidden;
 }
-</style>
+</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src>
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
     
   
@@ -2974,22 +3005,5 @@
 
   
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":75,"height":150,"vOffset":-35},"mobile":{"show":false},"log":false,"tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src>
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":75,"height":150,"vOffset":-35},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
