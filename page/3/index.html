@@ -361,6 +361,698 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/52638.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/52638.html" class="post-title-link" itemprop="url">hihoCoder1513 (小Hi的烦恼)[bitset]</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-01 10:36:17" itemprop="dateCreated datePublished" datetime="2018-09-01T10:36:17+08:00">2018-09-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/52638.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/52638.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>题目链接：</strong><a href="https://hihocoder.com/problemset/problem/1513" rel="external nofollow noopener noreferrer" target="_blank">https://hihocoder.com/problemset/problem/1513</a></p>
+<p>题目大意：给定许多人的五门课排名，询问每个人有多少人所有课的排名都能碾压他。</p>
+<blockquote>
+<p>小Hi：今天我们来解决“五维数点”问题。<br>小Ho：什么是“五维数点”问题呢？<br>小Hi：抽象来说，我们现在有n个在五维空间中的点$(X_i,Y_i,Z_i,Q_i,W_i)$。现在对于每个点，我们需要知道所有坐标均比它小的点的数量。<br>小Ho：这个问题看起来似曾相似，如果是在二维空间中似乎是一个经典的运用线段树解决的题目。<br>小Hi：对。但是现在是在五维空间中，看起来难度大了很多。<br>小Ho：我想用集合的角度去考虑这个问题。对于每一维，比如说X维，我们能通过按X维的坐标排序，不难求出对i点来说X维比i点小的所有点的集合。现在的问题就转化成对点i来说，求出X维，Y维，Z维，Q维，W维分别比i所在那一维小的集合的交的大小。<br>小Hi：对！你的思路很好。但是集合大小是O(N^2)，如果暴力实现的话时间复杂度就达到了O(N^2)。<br>小Ho：那该怎么办呢？<br>小Hi：我们想想可以用什么合理的方法来表示集合以此来加快求集合交的操作。<br>小Ho：我觉得一种比较直观的方法是用一个长度为n的01串，第i位为0表示i不在集合中，1表示i在集合中。<br>小Hi：不错哟！那你仔细观察一下，求集合的交到底具有什么性质？比如对于n=6,集合{1,4,5}和集合{2,4,5,6}来说，它们的交是{4,5}。<br>小Ho：集合求交在01串中可以这么看：若两串第i位都是1，则交的串第i位是1，否则第i位就是0。这个例子中两个集合的01串分别为100110,010111。它们的交就是000110，也就是{4,5}。<br>小Hi：是的。我们把这个问题转化成了对01串的操作。你有没有发现，这其实类似于二进制中”and”的操作。如果我们把01串看成一个二进制的大整数，那么集合求交就变成了对两个大整数做”and”的操作。<br>小Ho：哈！有道理。但是这看起来复杂度似乎依旧是O(N^2)的。<br>小Hi：啊！但是你有没有想过，我们可以利用程序语言中的32位整数加速这个”and”，也就是说我们每32位压缩成一个32位整数，这样本来我们需要32次的操作，一下就变成了做一次位运算“并”的操作。所有我们最后的复杂度能优化成O(N^2/32)。<br>小Ho：原来如此！那具体怎么实现这个“压缩”的过程呢？<br>小Hi：其实c++/Java已经为我们设计了这样一种数据结构来解决这种问题。它的名字叫bitset/BitSet。它类似于数组，但是你可以直接对其做位运算。bitset中还有一些有用的函数，如count/cardinality可以快速算出二进制中有多少个1（这其实是一个不太好做的问题）。<br>引用自题目页提式</p>
+</blockquote>
+<p>感觉比较难想到的是单独对于每一维排序后可以直接$O(n)$递推出每个人这一科的排名关系。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/52638.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/28241.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/28241.html" class="post-title-link" itemprop="url">POJ3678 (Katu Puzzle)[2-SAT]</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-01 10:26:29" itemprop="dateCreated datePublished" datetime="2018-09-01T10:26:29+08:00">2018-09-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/28241.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/28241.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>题目链接：</strong><a href="http://poj.org/problem?id=3678" rel="external nofollow noopener noreferrer" target="_blank">http://poj.org/problem?id=3678</a></p>
+<p>2-SAT模板题，注意四种条件中a &amp; b = 1和a | b = 0的情况，前者需要u^1 -&gt; u, v^1 -&gt; v连边，后者需要u -&gt; u^1, v -&gt; v^1连边。<br>相当于无论如何都要选u^1（无论如何都要选v^1）。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/28241.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/43015.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/43015.html" class="post-title-link" itemprop="url">BZOJ2208 (连通数)[bitset, Floyd]</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-01 10:20:14" itemprop="dateCreated datePublished" datetime="2018-09-01T10:20:14+08:00">2018-09-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/43015.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/43015.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>题目链接：</strong><a href="https://www.lydsy.com/JudgeOnline/problem.php?id=2208" rel="external nofollow noopener noreferrer" target="_blank">https://www.lydsy.com/JudgeOnline/problem.php?id=2208</a></p>
+<p>其实这题可以用Floyd…<br>用bitset跑Floyd传递闭包处理出每一对点之间的连通关系，然后$O(n^2)$枚举两个点之间是否连通计数即可。<br>感觉bitset常数还是比较小的。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/43015.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/6871.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhlwsk">
+      <meta itemprop="description" content="I will persist until I win.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="木屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/archives/6871.html" class="post-title-link" itemprop="url">BZOJ2734 (集合选数)[状压DP, 矩阵]</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-01 09:59:33" itemprop="dateCreated datePublished" datetime="2018-09-01T09:59:33+08:00">2018-09-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/6871.html#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/6871.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>题目链接：</strong><a href="https://www.lydsy.com/JudgeOnline/problem.php?id=1087" rel="external nofollow noopener noreferrer" target="_blank">https://www.lydsy.com/JudgeOnline/problem.php?id=1087</a></p>
+<p>考虑到选取集合中的元素不能是乘2或乘3相邻，我们尝试构造一个矩阵：<br>$$<br>\begin{bmatrix}<br>    x &amp; 3x &amp; 9x &amp; \cdots \\<br>    2x &amp; 6x &amp; 18x &amp; \cdots \\<br>    4x &amp; 12x &amp; 36x &amp; \cdots \\<br>    \vdots &amp; \vdots &amp; \vdots &amp; \ddots \\<br>\end{bmatrix}<br>$$<br>这样只需要在矩阵中选取不相邻的元素就能满足题意了。<br>这个矩阵的长宽是log级的，因此问题转化成了类似<a href="https://www.mhlwsk.com/archives/33051.html">互不侵犯King</a>的问题。<br>$x$代入不是2或3倍数的数构造多个矩阵，结果根据乘法原理相乘就是答案了。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/archives/6871.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/10840.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1388,697 +2080,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/42973.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/42973.html" class="post-title-link" itemprop="url">CodeForces 540D (Bad Luck Island)[概率DP]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-27 22:37:27" itemprop="dateCreated datePublished" datetime="2018-08-27T22:37:27+08:00">2018-08-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/42973.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/42973.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://codeforces.com/problemset/problem/540/D" rel="external nofollow noopener noreferrer" target="_blank">http://codeforces.com/problemset/problem/540/D</a></p>
-<p>概率DP，<code>dp[i][j][k]</code>表示还剩i个石头，j个剪刀，k个布的概率。</p>
-<p>以石头减少为例，<code>dp[i][j][k]</code>转移到<code>dp[i-1][j][k]</code>的概率为<code>i*k/(i*j+j*k+i*k)</code><br>这样就有<code>dp[i-1][j][k]+=dp[i][j][k]*(1.0*i*k)/(i*j+j*k+i*k)</code></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/42973.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/9385.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/9385.html" class="post-title-link" itemprop="url">CodeForces 274B (Zero Tree)[树型DP]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-27 22:22:25" itemprop="dateCreated datePublished" datetime="2018-08-27T22:22:25+08:00">2018-08-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/9385.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/9385.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://codeforces.com/problemset/problem/274/B" rel="external nofollow noopener noreferrer" target="_blank">http://codeforces.com/problemset/problem/274/B</a></p>
-<p>题目大意：给定一颗以1为根结点的树，每个结点有一个权值，每次选择包含根结点的子树（注意：这里的子树与一般意义的子树定义不同，这里的子树是只要包含根结点的连通树就行，不一定非要包含所有孩子结点）并把这棵子树上的所有结点权值加一或减一，问至少多少次操作能让这棵树权值为零。</p>
-<p>这题题意理解了半天。。</p>
-<p>可以看到一个结点的孩子结点一定比它先处理完成（否则即使处理完了这个结点，在处理这个结点的孩子结点时，这个结点仍然会受到影响）。这满足无后效性原则，可以考虑树型DP。对于每个结点维护一个up值代表它至少需要被加一多少次，和一个down值代表它至少需要被减一多少次。每次状态转移时分两步：第一步up[u]=max{up[v]}, down[u]=max{down[v]}，第二步合并up[u], down[v], c[u]并将当前结点需要改变的值统计如up[u]或down[u]中。最终的结果就是up[1]+down[1]。<br>状态转移第一步的原理：每次修改孩子结点，一定是按照需要修改次数最多的叶子结点来，因为那些需要修改次数较少的节点的修改过程可以并入前者的修改过程中。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/9385.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/27402.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/27402.html" class="post-title-link" itemprop="url">POJ2891 (Strange Way to Express Integers)[中国剩余定理]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-27 22:10:31" itemprop="dateCreated datePublished" datetime="2018-08-27T22:10:31+08:00">2018-08-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/27402.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/27402.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://poj.org/problem?id=2891" rel="external nofollow noopener noreferrer" target="_blank">http://poj.org/problem?id=2891</a></p>
-<p>这题是中国剩余定理模板题（余数不保证互素的情况）。这里直接贴上模板。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/27402.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.mhlwsk.com/archives/52188.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhlwsk">
-      <meta itemprop="description" content="I will persist until I win.">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="木屋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/archives/52188.html" class="post-title-link" itemprop="url">CodeForces 687B (Remainders Game)[中国剩余定理]</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-27 22:06:31" itemprop="dateCreated datePublished" datetime="2018-08-27T22:06:31+08:00">2018-08-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2020-07-30 21:07:23" itemprop="dateModified" datetime="2020-07-30T21:07:23+08:00">2020-07-30</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/archives/52188.html#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/52188.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>题目链接：</strong><a href="http://codeforces.com/problemset/problem/687/B" rel="external nofollow noopener noreferrer" target="_blank">http://codeforces.com/problemset/problem/687/B</a></p>
-<p>这题是中国剩余定理解的性质。令M=lcm(c1,c2,…,cn)，则对x mod ci=ri用中国剩余定理求得的解在模M意义下是同余的，也即求得的解加上p*M可以得到通解。因而判断M%k==0是否成立，如果成立则x mod k的值是唯一的。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/archives/52188.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2128,7 +2129,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-count">130</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2906,11 +2907,11 @@
   
     
       
-    
-      
-    
-      
         
+      
+    
+      
+    
       
     
       
@@ -2963,24 +2964,7 @@
 .MathJax_Display {
   overflow: auto hidden;
 }
-</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src>
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+</style>
 
     
   
@@ -3002,5 +2986,22 @@
 
   
 
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":75,"height":150,"vOffset":-35},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":75,"height":150,"vOffset":-35},"mobile":{"show":false},"log":false,"tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src>
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body>
 </html>
